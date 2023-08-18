@@ -15,4 +15,4 @@ const userModel = new mongoose.Schema({
   },
 })
 
-export default mongoose.model('weight_loss_user', userModel)
+export default mongoose.model('weight_user', userModel)
