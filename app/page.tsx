@@ -16,7 +16,7 @@ export default async function Home() {
       {JSON.stringify(decoded)}
 
       <Link href="/login">login</Link>
-      <Link href="/registration">register</Link>
+      <Link href="/signup">register</Link>
     </main>
   )
 }
