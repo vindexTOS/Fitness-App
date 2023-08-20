@@ -7,6 +7,7 @@ import dbDisconnect from '@/lib/mongodbDisconnect'
 export async function POST(req: any) {
   const { email, password } = await req.json()
   try {
+    console.log(email, password)
     await dbConnect()
 
     const userExists = await user_model.findOne({ email: email })
