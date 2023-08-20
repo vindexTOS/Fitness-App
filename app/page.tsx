@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-
 import jwt from 'jwt-decode'
 export default async function Home() {
   const cookieStore = cookies()

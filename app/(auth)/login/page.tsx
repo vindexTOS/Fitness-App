@@ -1,12 +1,14 @@
 'use client'
-import { useEffect } from 'react'
-import axios from 'axios'
+
 import React, { useState } from 'react'
 import { AiOutlineEye } from 'react-icons/Ai'
 import { AiOutlineEyeInvisible } from 'react-icons/Ai'
+import axios from 'axios'
 import Cookies from 'universal-cookie'
 import jwt from 'jwt-decode'
+
 export default function Login() {
+  const cookies = new Cookies()
   const [password, setPassword] = useState<string>('')
   const [userName, setUserName] = useState<string>('')
   const [isVisible, setIsVisible] = useState<boolean>(false)
@@ -25,8 +27,7 @@ export default function Login() {
     setUserName(value)
   }
 
-  const cookies = new Cookies()
-  const handleLogin = async () => {
+  const handleLogin = async (event: MouseEvent) => {
     try {
       const response = await axios.post('http://localhost:3000/api/login', {
         email: userName,
@@ -45,7 +46,6 @@ export default function Login() {
       console.log(error)
     }
   }
-
   return (
     <div className="flex justify-center items-center h-screen">
       <form>
@@ -101,10 +101,10 @@ export default function Login() {
         </div>
         <div className="flex flex-wrap">
           <button
-            onClick={() => handleLogin()}
             className="text-black disabled:bg-slate-50 disabled:text-slate-400  disabled:shadow-none shadow shadow-slate-500 bg-white border-slate-300 font-bold py-2 px-4 rounded  w-full sm:w-1/2"
             type="button"
             disabled={!Boolean(password.length) || !Boolean(userName)}
+            onClick={handleLogin}
           >
             Sign In
           </button>
