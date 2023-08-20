@@ -27,7 +27,7 @@ export default function Login() {
     setUserName(value);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (event:MouseEvent) => {
     try {
       const response = await axios.post("http://localhost:3000/api/login", {
         email: userName,
