@@ -1,27 +1,51 @@
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { AiOutlineEye } from "react-icons/Ai";
-import { AiOutlineEyeInvisible } from "react-icons/Ai";
-
+import axios from 'axios'
+import React, { useState } from 'react'
+import { AiOutlineEye } from 'react-icons/Ai'
+import { AiOutlineEyeInvisible } from 'react-icons/Ai'
+import Cookies from 'universal-cookie'
+import jwt from 'jwt-decode'
 export default function Login() {
-  const [password, setPassword] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
-  const [isVisible, setIsVisible] = useState<boolean>(false);
-  const handleToggle = (event:React.MouseEvent) => {
+  const [password, setPassword] = useState<string>('')
+  const [userName, setUserName] = useState<string>('')
+  const [isVisible, setIsVisible] = useState<boolean>(false)
+  const handleToggle = (event: React.MouseEvent) => {
     event.preventDefault()
 
-    setIsVisible((prevState) => !prevState);
-  };
+    setIsVisible((prevState) => !prevState)
+  }
 
   const handlePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setPassword(value);
-  };
+    const { value } = event.target
+    setPassword(value)
+  }
   const handleUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setUserName(value);
-  };
+    const { value } = event.target
+    setUserName(value)
+  }
+
+  const cookies = new Cookies()
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/login', {
+        email: userName,
+        password,
+      })
+      const data = response.data
+      const newToken = data.token
+      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`
+      const decoded: any = await jwt(newToken)
+      cookies.set('jwt_authorization', newToken, {
+        expires: new Date(decoded.exp * 1000),
+      })
+      console.log(data)
+      return data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className="flex justify-center items-center h-screen">
       <form>
@@ -50,9 +74,11 @@ export default function Login() {
           </label>
           <div className="relative">
             <input
-              className={`shadow appearance-none  sm:w-[30vw]  border ${Boolean(password.length)?'border-green-500': 'border-red-500'} rounded  py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
+              className={`shadow appearance-none  sm:w-[30vw]  border ${
+                Boolean(password.length) ? 'border-green-500' : 'border-red-500'
+              } rounded  py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
               id="password"
-              type={isVisible ? "text" : "password"}
+              type={isVisible ? 'text' : 'password'}
               value={password}
               placeholder="******************"
               onChange={handlePassword}
@@ -62,18 +88,21 @@ export default function Login() {
                 className="absolute right-4 top-[20%]"
                 onClick={handleToggle}
               >
-                {isVisible ? <AiOutlineEye/> : <AiOutlineEyeInvisible/>}
+                {isVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
               </button>
             )}
           </div>
 
-          { !Boolean(password.length)  && <p className="text-red-500 text-xs italic">
-            Please choose a password.
-          </p>}
+          {!Boolean(password.length) && (
+            <p className="text-red-500 text-xs italic">
+              Please choose a password.
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap">
           <button
-            className= "text-black disabled:bg-slate-50 disabled:text-slate-400  disabled:shadow-none shadow shadow-slate-500 bg-white border-slate-300 font-bold py-2 px-4 rounded  w-full sm:w-1/2"
+            onClick={() => handleLogin()}
+            className="text-black disabled:bg-slate-50 disabled:text-slate-400  disabled:shadow-none shadow shadow-slate-500 bg-white border-slate-300 font-bold py-2 px-4 rounded  w-full sm:w-1/2"
             type="button"
             disabled={!Boolean(password.length) || !Boolean(userName)}
           >
@@ -88,5 +117,5 @@ export default function Login() {
         </div>
       </form>
     </div>
-  );
+  )
 }

@@ -1,12 +1,11 @@
 import Image from 'next/image'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
-import connectMongoDb from '@/lib/mongodb'
+
 import jwt from 'jwt-decode'
 export default async function Home() {
   const cookieStore = cookies()
   const name = cookieStore.get('jwt_authorization')
-  await connectMongoDb()
 
   const decoded: any = name?.value && (await jwt(name?.value || 'no user'))
 
