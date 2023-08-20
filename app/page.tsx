@@ -5,7 +5,6 @@ import jwt from 'jwt-decode'
 export default async function Home() {
   const cookieStore = cookies()
   const name = cookieStore.get('jwt_authorization')
-  
 
   const decoded: any = name?.value && (await jwt(name?.value || 'no user'))
 
